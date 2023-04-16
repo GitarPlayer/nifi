@@ -82,6 +82,8 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             NIFI_VERSION=1.21.0
+          build-contexts: |
+            nifi=index.docker.io/apache/nifi:1.21.0    
           secrets: |
             "org=${{ secrets.REDHAT_ORG }}"
             "activationkey=${{ secrets.REDHAT_ACTIVATION_KEY }}"
