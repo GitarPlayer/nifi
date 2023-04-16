@@ -24,11 +24,11 @@ ARG MAINTAINER="GitarPlayer"
 ARG NIFI_VERSION=1.21.0
 LABEL maintainer="${MAINTAINER}"
 
-ENV NIFI_BASE_DIR=/opt/nifi \
-       NIFI_HOME=${NIFI_BASE_DIR}/nifi-current \
-       NIFI_TOOLKIT_HOME=${NIFI_BASE_DIR}/nifi-toolkit-current \
-       NIFI_PID_DIR=${NIFI_HOME}/run \
-       NIFI_LOG_DIR=${NIFI_HOME}/logs
+ENV NIFI_BASE_DIR=/opt/nifi
+ENV NIFI_HOME=${NIFI_BASE_DIR}/nifi-current
+ENV NIFI_TOOLKIT_HOME=${NIFI_BASE_DIR}/nifi-toolkit-current
+ENV NIFI_PID_DIR=${NIFI_HOME}/run
+ENV NIFI_LOG_DIR=${NIFI_HOME}/logs
 
 COPY --from=nifi --chown=:0 ${NIFI_BASE_DIR} ${NIFI_BASE_DIR}
 
