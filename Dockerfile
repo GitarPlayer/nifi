@@ -30,7 +30,7 @@ ENV NIFI_BASE_DIR=/opt/nifi \
        NIFI_PID_DIR=${NIFI_HOME}/run \
        NIFI_LOG_DIR=${NIFI_HOME}/logs
 
-COPY --from=index.docker.io/apache/nifi:${NIFI_VERSION} --chown=:0 ${NIFI_BASE_DIR} ${NIFI_BASE_DIR}
+COPY --from=nifi --chown=:0 ${NIFI_BASE_DIR} ${NIFI_BASE_DIR}
 
 VOLUME ${NIFI_LOG_DIR} \
        ${NIFI_HOME}/conf \
