@@ -80,6 +80,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build_args: |
+            NIFI_VERSION=1.21.0
           secrets: |
             "org=${{ secrets.REDHAT_ORG }}"
             "activationkey=${{ secrets.REDHAT_ACTIVATION_KEY }}"
