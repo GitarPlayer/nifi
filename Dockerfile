@@ -65,6 +65,7 @@ USER root
 ENV SMDEV_CONTAINER_OFF=1
 # Clear nifi-env.sh in favour of configuring all environment variables in the Dockerfile
 RUN echo "#!/bin/sh\n" > $NIFI_HOME/bin/nifi-env.sh \
+       && mkdir -p /etc/yum/vars \
        && echo "9" > /etc/yum/vars/releasever \
        && echo "x86_64" > /etc/yum/vars/basearch \    
        && microdnf install -y jq xmlstarlet procps \
