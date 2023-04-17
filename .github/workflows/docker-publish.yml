@@ -24,7 +24,9 @@ env:
 
 jobs:
   build:
-
+    strategy:
+          matrix:
+            nifi_version: [1.16.0, 1.16.1, 1.16.2, 1.16.3, 1.17.0, 1.18.0, 1.19.0, 1.19.1, 1.20.0, 1.21.0, latest]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -67,6 +69,8 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ matrix.nifi_version }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -80,10 +84,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: |
-            NIFI_VERSION=1.21.0
           build-contexts: |
-            nifi=docker-image://index.docker.io/apache/nifi:1.21.0    
+            nifi=docker-image://index.docker.io/apache/nifi:${{ matrix.nifi_version }}
           secrets: |
             "org=${{ secrets.REDHAT_ORG }}"
             "activationkey=${{ secrets.REDHAT_ACTIVATION_KEY }}"
