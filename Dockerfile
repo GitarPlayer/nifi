@@ -36,18 +36,18 @@ COPY <<EOF /etc/yum.repos.d/almalinux.repo
 # almalinux.repo
 
 [baseos]
-name=AlmaLinux $releasever - BaseOS
-mirrorlist=https://mirrors.almalinux.org/mirrorlist/$releasever/baseos
-# baseurl=https://repo.almalinux.org/almalinux/$releasever/BaseOS/$basearch/os/
+name=AlmaLinux 9 - BaseOS
+mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/baseos
+# baseurl=https://repo.almalinux.org/almalinux/9/BaseOS/x86_64/os/
 enabled=1
 gpgcheck=1
 countme=1
 gpgkey=https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux-9
 
 [appstream]
-name=AlmaLinux $releasever - AppStream
-mirrorlist=https://mirrors.almalinux.org/mirrorlist/$releasever/appstream
-# baseurl=https://repo.almalinux.org/almalinux/$releasever/AppStream/$basearch/os/
+name=AlmaLinux 9 - AppStream
+mirrorlist=https://mirrors.almalinux.org/mirrorlist/9/appstream
+# baseurl=https://repo.almalinux.org/almalinux/9/AppStream/x86_64/os/
 enabled=1
 gpgcheck=1
 countme=1
@@ -64,10 +64,7 @@ VOLUME ${NIFI_LOG_DIR} \
 USER root
 ENV SMDEV_CONTAINER_OFF=1
 # Clear nifi-env.sh in favour of configuring all environment variables in the Dockerfile
-RUN echo "#!/bin/sh\n" > $NIFI_HOME/bin/nifi-env.sh \
-       && mkdir -p /etc/yum/vars \
-       && echo "9" > /etc/yum/vars/releasever \
-       && echo "x86_64" > /etc/yum/vars/basearch \    
+RUN echo "#!/bin/sh\n" > $NIFI_HOME/bin/nifi-env.sh \  
        && microdnf install -y jq xmlstarlet procps \
        && microdnf upgrade -y --refresh --best --nodocs --noplugins --setopt=install_weak_deps=0 \
        && microdnf clean all \ 
