@@ -32,6 +32,28 @@ ENV NIFI_LOG_DIR=${NIFI_HOME}/logs
 
 COPY --from=nifi --chown=:0 ${NIFI_BASE_DIR} ${NIFI_BASE_DIR}
 
+COPY <<EOF /etc/yum.repos.d/almalinux.repo
+# almalinux.repo
+
+[baseos]
+name=AlmaLinux $releasever - BaseOS
+mirrorlist=https://mirrors.almalinux.org/mirrorlist/$releasever/baseos
+# baseurl=https://repo.almalinux.org/almalinux/$releasever/BaseOS/$basearch/os/
+enabled=1
+gpgcheck=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux
+
+[appstream]
+name=AlmaLinux $releasever - AppStream
+mirrorlist=https://mirrors.almalinux.org/mirrorlist/$releasever/appstream
+# baseurl=https://repo.almalinux.org/almalinux/$releasever/AppStream/$basearch/os/
+enabled=1
+gpgcheck=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-AlmaLinux
+EOF
+
 VOLUME ${NIFI_LOG_DIR} \
        ${NIFI_HOME}/conf \
        ${NIFI_HOME}/database_repository \
@@ -42,16 +64,9 @@ VOLUME ${NIFI_LOG_DIR} \
 USER root
 ENV SMDEV_CONTAINER_OFF=1
 # Clear nifi-env.sh in favour of configuring all environment variables in the Dockerfile
-RUN --mount=type=secret,id=org --mount=type=secret,id=activationkey \
-       echo "#!/bin/sh\n" > $NIFI_HOME/bin/nifi-env.sh \
-       && microdnf install -y subscription-manager \ 
-       && subscription-manager register --org=$(cat /run/secrets/org) --activationkey=$(cat /run/secrets/activationkey) \ 
+RUN echo "#!/bin/sh\n" > $NIFI_HOME/bin/nifi-env.sh \
        && microdnf install -y jq xmlstarlet procps \
        && microdnf upgrade -y --refresh --best --nodocs --noplugins --setopt=install_weak_deps=0 \
-       && subscription-manager remove --all \
-       && subscription-manager unregister \
-       && subscription-manager clean \
-       && microdnf remove -y subscription-manager \
        && microdnf clean all \ 
        && chown -R :0 ${NIFI_BASE_DIR} \
        && chmod -R g+rwX ${NIFI_BASE_DIR} 
