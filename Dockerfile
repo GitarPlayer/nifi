@@ -65,7 +65,7 @@ USER root
 ENV SMDEV_CONTAINER_OFF=1
 # Clear nifi-env.sh in favour of configuring all environment variables in the Dockerfile
 RUN echo "#!/bin/sh\n" > $NIFI_HOME/bin/nifi-env.sh \  
-       && microdnf install -y jq xmlstarlet procps \
+       && microdnf install -y jq xmlstarlet procps hostname \
        && microdnf upgrade -y --refresh --best --nodocs --noplugins --setopt=install_weak_deps=0 \
        && microdnf clean all \ 
        && chown -R :0 ${NIFI_BASE_DIR} \
